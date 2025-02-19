@@ -5,7 +5,7 @@ from pywbem import CIMInstance
 # Define connection parameters
 hostname = "192.168.43.43"
 username = "root"
-password = "Sepahan55555&"
+password = "pass"
 namespace = "root/cimv2"  # The base namespace for VMware-related namespaces
 
 # Connect to the WBEM server on ESXi
