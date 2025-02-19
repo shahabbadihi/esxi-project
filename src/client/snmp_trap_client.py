@@ -75,7 +75,6 @@ class SNMPTrapClient:
             logger.error(f"SNMP dispatcher stopped: {e}")
         finally:
             self.running = False
-            self._snmp_engine.transport_dispatcher.close_dispatcher()
 
     def __enter__(self):
         if not self.running:
@@ -87,7 +86,6 @@ class SNMPTrapClient:
         if self.running:
             logger.info("Stopping SNMP trap listener...")
             self.running = False
-            self._snmp_engine.transport_dispatcher.close_dispatcher()
             if self.thread and self.thread.is_alive():
                 self.thread.join(timeout=0.5)
         logger.info("SNMPTrapClient exited successfully")
