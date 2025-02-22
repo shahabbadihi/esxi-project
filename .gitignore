@@ -4,4 +4,6 @@ file.log
 
 .idea
 
-__pycache__/
+**/__pycache__/
+
+demo.py
