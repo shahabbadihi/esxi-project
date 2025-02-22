@@ -1,5 +1,6 @@
 from typing import Callable
 import threading
+import asyncio
 
 from pysnmp.entity import engine, config
 from pysnmp.carrier.asyncio.dgram import udp
@@ -33,6 +34,10 @@ class SNMPTrapClient:
         self._setup()
 
     def _setup(self):
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            asyncio.set_event_loop(asyncio.new_event_loop())
         config.add_transport(
             self._snmp_engine,
             udp.DOMAIN_NAME + (1,),

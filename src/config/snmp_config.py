@@ -6,12 +6,21 @@ class SNMPConfig(BaseSettings):
     trap_receiver_community_index: str
     trap_receiver_ip: str
     trap_receiver_port: int
-
     uptime_oid: str
     trap_type_oid: str
     vm_power_on_trap_oid: str
     vm_power_off_trap_oid: str
     vm_display_name_oid: str
+    vm_config_file_oid: str
+    vm_mem_size_oid: str
+    vm_state_oid: str
+    vm_cpu_cores_oid: str
+    vm_entry_oid: str
+    vm_uuid_oid: str
+    agent_ip: str
+    agent_port: int
+    request_community_name: str
+    version: int
 
     class Config:
         env_prefix = "SNMP_"
