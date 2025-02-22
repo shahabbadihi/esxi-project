@@ -64,7 +64,7 @@ class SNMPManagerApp:
             for info in vm_infos:
                 for oid, val in info.items():
                     print(f"{oid} -> {val}")
-                print("-" * 100)
+                print("-" * 99)
         except Exception as e:
             logger.error(f"Error occurred while view all vms info: {str(e)}")
 
