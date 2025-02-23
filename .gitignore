@@ -8,3 +8,5 @@ __pycache__/
 *.pyc
 
 demo.py
+demo_snmp.py
+demo_vmomi.py

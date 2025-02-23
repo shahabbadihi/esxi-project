@@ -24,15 +24,7 @@ class WBEMClient:
         if self.conn:
             self.conn.close()
 
-    def enumerate_instances(self, class_name: str) -> List[Dict]:
+    def enumerate_instances(self, class_name: str, namespace: str) -> List[Dict]:
         if not self.conn:
             raise RuntimeError("Connection is not established.")
-        return self.conn.EnumerateInstances(class_name)
-
-    def create_instance(self, class_name: str, properties: Dict, namespace: str):
-        if not self.conn:
-            raise RuntimeError("Connection is not established.")
-        self.conn.CreateInstance(
-            CIMInstance(classname=class_name, properties=properties),
-            namespace=namespace,
-        )
+        return self.conn.EnumerateInstances(class_name, namespace=namespace)

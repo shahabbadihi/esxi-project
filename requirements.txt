@@ -1,3 +1,5 @@
 pysnmp==7.1.16
-pywbem==1.7.2
+pyvmomi
+pywbem==1.7.0
 pydantic-settings==2.7.1
+pydantic

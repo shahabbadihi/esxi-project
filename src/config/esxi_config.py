@@ -3,10 +3,12 @@ from pydantic_settings import BaseSettings
 
 class ESXiConfig(BaseSettings):
     host: str
+    ip: str
+    hostname: str
     username: str
     password: str
-    computer_system_class_name: str
-    vm_namespace: str
+    processor_cim_class_name: str
+    processor_cim_namespace: str
 
     class Config:
         env_prefix = "ESXI_"
