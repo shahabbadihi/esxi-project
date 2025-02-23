@@ -45,7 +45,6 @@ class SNMPRequestClient:
                 for var_bind in var_binds:
                     var_oid, var_value = var_bind[0], var_bind[1]
                     logger.info(f"{var_oid} = {var_value}")
-                    results.append((str(var_oid), str(var_value)))
 
                     if not str(var_oid).startswith(str(original_oid)):
                         logger.info(
@@ -53,6 +52,8 @@ class SNMPRequestClient:
                         )
                         is_walk_finished = True
                         break
+
+                    results.append((str(var_oid), str(var_value)))
 
             oid = var_binds[-1][0]
 

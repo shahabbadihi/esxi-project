@@ -1,3 +1,4 @@
+import asyncio
 from typing import List, Dict, Any
 
 from service import SNMPESXiService
@@ -21,8 +22,10 @@ class SNMPManagerApp:
             if option == 1:
                 self._enter_monitor_vm_on_off_operation()
             elif option == 2:
-                self._enter_view_all_vms_info()
+                self._enter_monitor_cpu_memory_usage_operation()
             elif option == 3:
+                self._enter_view_all_vms_info_operation()
+            elif option == 4:
                 print("Exiting ...")
                 exit()
 
@@ -36,8 +39,9 @@ class SNMPManagerApp:
         print(
             """
         1) Monitor VM on/off
-        2) View all VMs info
-        3) Exit
+        2) Monitor CPU/Memory usage of ESXi host
+        3) View all VMs info
+        4) Exit
         """
         )
 
@@ -58,7 +62,7 @@ class SNMPManagerApp:
         except KeyboardInterrupt:
             logger.info("Shutting down monitoring...")
 
-    def _enter_view_all_vms_info(self):
+    def _enter_view_all_vms_info_operation(self):
         try:
             vm_infos: List[Dict[str, Any]] = self._snmp_esxi_vm_service.list_all_vms()
             for info in vm_infos:
@@ -67,6 +71,21 @@ class SNMPManagerApp:
                 print("-" * 99)
         except Exception as e:
             logger.error(f"Error occurred while view all vms info: {str(e)}")
+
+    def _enter_monitor_cpu_memory_usage_operation(self):
+        print("Now monitoring CPU and storages usage on ESXi server ...")
+        print("You can press ctrl + C to back to main menu.")
+        print()
+        loop = asyncio.new_event_loop()
+        try:
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(
+                self._snmp_esxi_vm_service.start_monitoring_host_cpu_memory_usage()
+            )
+        except KeyboardInterrupt:
+            print("Monitoring stopped.")
+        finally:
+            loop.close()
 
 
 if __name__ == "__main__":

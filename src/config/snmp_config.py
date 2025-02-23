@@ -17,6 +17,10 @@ class SNMPConfig(BaseSettings):
     vm_cpu_cores_oid: str
     vm_entry_oid: str
     vm_uuid_oid: str
+    host_cpu_load_percentage_oid: str
+    host_memory_type_oid: str
+    host_memory_used_kb_oid: str
+    host_memory_total_kb_oid: str
     agent_ip: str
     agent_port: int
     request_community_name: str
