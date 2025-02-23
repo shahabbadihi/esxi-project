@@ -39,3 +39,15 @@ class VmomiESXiService:
                     guest_id=guest_id,
                 )
             )
+
+    def start_monitoring_logs(self):
+        with VmomiClient(
+            host=self._ip,
+            hostname=self._hostname,
+            username=self._username,
+            pwd=self._password,
+        ) as client:
+            try:
+                client.monitor_real_time_logs(interval=5)
+            except Exception as e:
+                logger.error(f"Error occurred while monitoring logs: {str(e)}")

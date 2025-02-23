@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+
 from schemas import CreateVMSchema
 
 from pyVmomi import vim
@@ -129,3 +132,21 @@ class VmomiClient:
             pass
         if task.info.state == vim.TaskInfo.State.error:
             raise Exception(f"Task failed: {task.info.error}")
+
+    def monitor_real_time_logs(self, interval=5):
+        event_manager = self.si.content.eventManager
+        filter_spec = vim.event.EventFilterSpec()
+
+        event_handler = event_manager.CreateCollectorForEvents(filter_spec)
+
+        while True:
+            events = event_handler.ReadNextEvents(10)
+            if events:
+                for event in events:
+                    timestamp = event.createdTime
+                    formatted_timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+
+                    print(
+                        f"[{formatted_timestamp}] System Event: {event.fullFormattedMessage}"
+                    )
+            time.sleep(interval)

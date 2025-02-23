@@ -2,6 +2,10 @@ from typing import Dict, List
 
 from service import WBEMESXiService, VmomiESXiService
 
+from utils.logger import setup_logger
+
+logger = setup_logger(__name__)
+
 
 class WBEMVmomiManagerApp:
 
@@ -18,6 +22,8 @@ class WBEMVmomiManagerApp:
             elif option == 2:
                 self._enter_create_vm_operation()
             elif option == 3:
+                self._enter_monitor_logs_operation()
+            elif option == 4:
                 print("Exiting ...")
                 exit()
 
@@ -32,7 +38,8 @@ class WBEMVmomiManagerApp:
             """
         1) Display ESXi System info
         2) Create VM
-        3) Exit
+        3) Monitor Logs
+        4) Exit
         """
         )
 
@@ -40,7 +47,7 @@ class WBEMVmomiManagerApp:
     def _wait_for_user_select_option() -> int:
         while True:
             user_input: str = input("Please enter a number of option: ")
-            if user_input.isdigit() and (1 <= int(user_input) <= 3):
+            if user_input.isdigit() and (1 <= int(user_input) <= 4):
                 return int(user_input)
             print("Invalid input! Please enter just a number of option.")
 
@@ -120,6 +127,17 @@ class WBEMVmomiManagerApp:
             f", disk size: {vm_disk_size_gb} GB, with guest os: {guest_os}"
             f"has been successfully created."
         )
+
+    def _enter_monitor_logs_operation(self):
+        print("Now monitoring logs of ESXi server that upadated each 5s ...")
+        print("You can press ctrl + C to back to main menu.")
+        print()
+        try:
+            self._vmomi_service.start_monitoring_logs()
+        except KeyboardInterrupt:
+            logger.info("Monitoring logs finished")
+        except Exception as e:
+            logger.error(f"Error occurred while monitoring logs: {str(e)}")
 
 
 if __name__ == "__main__":

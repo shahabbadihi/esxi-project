@@ -49,7 +49,7 @@ class SNMPManagerApp:
     def _wait_for_user_select_option() -> int:
         while True:
             user_input: str = input("Please enter a number of option: ")
-            if user_input.isdigit() and (1 <= int(user_input) <= 3):
+            if user_input.isdigit() and (1 <= int(user_input) <= 4):
                 return int(user_input)
             print("Invalid input! Please enter just a number of option.")
 
@@ -73,7 +73,7 @@ class SNMPManagerApp:
             logger.error(f"Error occurred while view all vms info: {str(e)}")
 
     def _enter_monitor_cpu_memory_usage_operation(self):
-        print("Now monitoring CPU and storages usage on ESXi server ...")
+        print("Now monitoring CPU and storages usage on ESXi server each 10s ...")
         print("You can press ctrl + C to back to main menu.")
         print()
         loop = asyncio.new_event_loop()
