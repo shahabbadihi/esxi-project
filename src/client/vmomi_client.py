@@ -42,10 +42,8 @@ class VmomiClient:
                 raise Exception(f"Datacenter '{schema.datacenter_name}' not found.")
             vm_folder = datacenter.vmFolder
         else:
-            esxi_host = self.get_obj(content, [vim.HostSystem], self.hostname)
-            if not esxi_host:
-                raise Exception(f"ESXi Host '{self.hostname}' not found.")
-            vm_folder = content.rootFolder  # Use the root folder for VM creation
+            datacenter = content.rootFolder.childEntity[0]
+            vm_folder = datacenter.vmFolder
 
         datastore = self.get_obj(content, [vim.Datastore], schema.datastore_name)
         if not datastore:
@@ -59,6 +57,14 @@ class VmomiClient:
         if not network:
             raise Exception(f"Network '{schema.network_name}' not found.")
 
+        scsi_spec = vim.vm.device.VirtualDeviceSpec()
+        scsi_spec.operation = vim.vm.device.VirtualDeviceSpec.Operation.add
+        scsi_spec.device = vim.vm.device.ParaVirtualSCSIController()
+        scsi_spec.device.key = 1000
+        scsi_spec.device.sharedBus = (
+            vim.vm.device.VirtualSCSIController.Sharing.noSharing
+        )
+
         disk_size_kb = int(schema.disk_size_gb) * 1024 * 1024
         disk_spec = vim.vm.device.VirtualDeviceSpec()
         disk_spec.fileOperation = "create"
@@ -71,7 +77,8 @@ class VmomiClient:
         )
         disk_spec.device.backing.thinProvisioned = True
         disk_spec.device.capacityInKB = disk_size_kb
-        disk_spec.device.controllerKey = 1000
+        disk_spec.device.unitNumber = 0
+        disk_spec.device.controllerKey = scsi_spec.device.key
 
         nic_spec = vim.vm.device.VirtualDeviceSpec()
         nic_spec.operation = vim.vm.device.VirtualDeviceSpec.Operation.add
@@ -91,7 +98,7 @@ class VmomiClient:
         vm_config_spec.memoryMB = int(schema.memory_mb)
         vm_config_spec.numCPUs = int(schema.num_cpus)
         vm_config_spec.guestId = schema.guest_id
-        vm_config_spec.deviceChange = [disk_spec, nic_spec]
+        vm_config_spec.deviceChange = [scsi_spec, disk_spec, nic_spec]
         vm_config_spec.files = vim.vm.FileInfo()
         vm_config_spec.files.vmPathName = f"[{schema.datastore_name}]"
 
