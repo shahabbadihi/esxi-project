@@ -10,9 +10,8 @@ import ssl
 
 class VmomiClient:
 
-    def __init__(self, host: str, hostname: str, username: str, pwd: str, port=443):
+    def __init__(self, host: str, username: str, pwd: str, port=443):
         self.host = host
-        self.hostname = hostname
         self.username = username
         self.pwd = pwd
         self.port = port

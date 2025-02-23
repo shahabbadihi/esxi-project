@@ -10,7 +10,6 @@ class VmomiESXiService:
 
     def __init__(self):
         self._ip = esxi_config.ip
-        self._hostname = esxi_config.hostname
         self._username = esxi_config.username
         self._password = esxi_config.password
 
@@ -24,7 +23,6 @@ class VmomiESXiService:
     ):
         with VmomiClient(
             host=self._ip,
-            hostname=self._hostname,
             username=self._username,
             pwd=self._password,
         ) as client:
@@ -43,7 +41,6 @@ class VmomiESXiService:
     def start_monitoring_logs(self):
         with VmomiClient(
             host=self._ip,
-            hostname=self._hostname,
             username=self._username,
             pwd=self._password,
         ) as client:
